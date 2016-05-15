@@ -26,3 +26,7 @@
 *.exe
 *.out
 *.app
+
+# SSID information
+ssid-info.h
+
