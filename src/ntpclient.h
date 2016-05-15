@@ -12,7 +12,8 @@ class ntp_client {
 public:
   /** Constructor.
    *  
-   *  @param udp Initialized UDP object.
+   *  @param udp UDP object. By the time get_time() is called, the object
+   *             must be already initialized (UDP::begin() was called).
    */
   ntp_client(UDP& udp)
     : udp_(udp)
