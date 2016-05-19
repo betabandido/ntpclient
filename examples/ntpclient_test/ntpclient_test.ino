@@ -8,10 +8,7 @@
 
 static PrintEx serial = Serial;
 
-static WiFiUDP Udp;
-static constexpr unsigned short local_port = 8888;
-
-static ntp_client ntp(Udp);
+static ntp_client ntp(std::unique_ptr<UDP>(new WiFiUDP()));
 
 void setup() {
   Serial.begin(9600);
@@ -27,8 +24,6 @@ void setup() {
   serial.printf("Address: %s\n", WiFi.localIP().toString().c_str());
   Serial.println("waiting for sync");
 
-  Udp.begin(local_port);
-  
   setSyncProvider([]() { return ntp.get_time(); });
   while(timeStatus() == timeNotSet)
     delay(100);

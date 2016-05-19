@@ -1,6 +1,8 @@
 #ifndef NTP_CLIENT_H
 #define NTP_CLIENT_H
 
+#include <memory>
+
 #include <Time.h>
 #include <Udp.h>
 
@@ -10,14 +12,13 @@
  */
 class ntp_client {
 public:
+  typedef std::unique_ptr<UDP> UDP_ptr;
+
   /** Constructor.
    *  
-   *  @param udp UDP object. By the time get_time() is called, the object
-   *             must be already initialized (UDP::begin() was called).
+   *  @param udp pointer to UDP object. 
    */
-  ntp_client(UDP& udp)
-    : udp_(udp)
-  {}
+  ntp_client(UDP_ptr udp, unsigned short local_port = 8888);
 
   /** Returns the current UTC time.
    *  
@@ -27,13 +28,13 @@ public:
   time_t get_time(unsigned timeout = 1000);
 
 private:
-  static constexpr char* server_name = "pool.ntp.org";
+  static constexpr char const* server_name = "pool.ntp.org";
   static constexpr unsigned short server_port = 123;
   static constexpr unsigned short packet_size = 48;
 
   uint8 buffer[packet_size];
   
-  UDP& udp_;
+  UDP_ptr udp_;
 };
 
 #endif // NTP_CLIENT_H
